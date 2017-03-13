@@ -1,0 +1,120 @@
+---
+title: "COD Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+#### Article ID: MbLKW
+#### Pilot: Cai Guo
+#### Co-pilot: Tom Hardwicke  
+#### Start date: 03/12/2017
+#### End date: 03/12/2017
+
+-------
+
+#### Methods summary:
+The original authors recruited participants from an online resource and disseminated the materials on the same online platform. Specifically, 48 participants completed a survey where they first read sentences containing fear-type and frighten-type verbs and then completed questions asking about how long they thought the mental state, indicated by the verb in each sentence, would last.
+------
+
+#### Target outcomes: 
+> The participants’ answers were converted to a 7-point Likert scale for analysis. Participants judged the mental state described in fear-type verbs to last significantly longer than those described by frighten-type verbs (t(256) = 19.9, p < 0.001) (Fig. 2). 18 of the fear-type verbs (42%) were judged to have longer durations than any of the frighten-type verbs, and 153 of the frighten-type verbs (71%) were judged to have shorter durations than any of the fear-type verbs.
+
+------
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+## Step 1: Load packages
+
+[Some useful packages are being loaded below. You can add any additional ones you might need too.]
+
+```{r}
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CODreports) # custom report functions
+```
+
+## Step 2: Load data
+
+```{r}
+d = read.csv("~/Desktop/Stanford/Homework/PSYC 254/set_MbLKW/data/duration.csv")
+```
+
+## Step 3: Tidy data
+
+```{r}
+d1 = d %>%
+  select(Type, word, Duration)
+
+d2 = d1 %>%
+  spread(Type, Duration)
+```
+
+## Step 4: Run analysis
+
+### Descriptive statistics
+
+```{r}
+mean(d2$SO, na.rm = T) #mean duration of mental states indicated by fear-type verbs
+mean(d2$SS, na.rm = T) #mean duration of mental states indicated by frighten-type verbs
+min(d2$SO, na.rm = T) #min value of fear-type verb in perceived duration
+max(d2$SO, na.rm = T) #max value of fear-type verb in perceived duration
+min(d2$SS, na.rm = T) #min value of frighten-type verb in perceived duration
+max(d2$SS, na.rm = T) #max value of frighten-type verb in perceived duration
+
+n1 = sum(d2$SO > max(d2$SS, na.rm = T), na.rm = T) #the number of fear-type verbs that have higher duration than any of the frighten-type verb
+n1
+n1/42 #percentage
+
+
+n2=sum(d2$SS < min(d2$SO, na.rm = T), na.rm = T) #the number of frighten-type verbs that have lower duration than any of the fear-type verb
+n2
+n2/216 #percentage
+
+```
+
+### Inferential statistics
+
+```{r}
+#lm model examining the relationship between verb type and perceived duration
+summary(lm(Duration~Type, d1))
+
+#boxplot visualizing the lm model
+boxplot(Duration~Type, data=d1, main="Type of Verbs and Perceived Duration", xlab="Type of Verb", ylab="Duration", ylim= c(1,7), names= c("Fear-Type", "Frighten-Type"), boxwex=0.4, par(mar=c(2,10,2,10))) 
+```
+
+The original graph in the paper:
+![](http://ars.els-cdn.com/content/image/1-s2.0-S0010027716301986-gr2.jpg)
+
+## Step 5: Conclusion
+
+```{r}
+compareValues(reportedValue = 18, obtainedValue = 17)
+compareValues(reportedValue = .42, obtainedValue = .40) #the percentage calculated based on the previous one
+compareValues(reportedValue = 153, obtainedValue = 150)
+compareValues(reportedValue = .71, obtainedValue = .69) #the percentage calculated based on the previous one
+
+```
+
+Conclusion:
+Except for a few minor discrepancies that are likely due to rounding differences, the project under investigation was reproduced successfully. Specifically, the reported results from the lm model in the original paper precisely matched the results obtained from the current reproduction attempt and the boxplot also matched the one obtained in the current reproduction attempt. 
+
+```{r report}
+codReport(Report_Type = 'pilot',
+          Article_ID = 'MbLKW', 
+          Insufficient_Information_Errors = 0,
+          Decision_Errors = 0, 
+          Major_Numerical_Errors = 0, 
+          Minor_Numerical_Errors = 4)
+```
+
+[This function will output information about the package versions used in this report:]
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
+```
