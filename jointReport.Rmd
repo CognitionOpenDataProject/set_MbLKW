@@ -128,7 +128,7 @@ compareValues(reportedValue = 19.9, obtainedValue = t.out$statistic) # compare t
 Except for a few minor discrepancies that are likely due to rounding differences, the project under investigation was reproduced successfully. Specifically, the reported results from the t-test and the boxplot in the original paper approximately matched the values obtained in the current reproduction attempt. 
 
 ```{r report}
-codReport(Report_Type = 'pilot',
+codReport(Report_Type = 'joint',
           Article_ID = 'MbLKW', 
           Insufficient_Information_Errors = 0,
           Decision_Errors = 0, 
