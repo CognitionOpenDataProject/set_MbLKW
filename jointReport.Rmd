@@ -66,8 +66,10 @@ The descriptive statistics are mainly in Figure 2 of the original paper:
 Let's try to reproduce it:
 
 ```{r}
-print(boxplot(Duration~Type, data=d_tidy, main="Type of Verbs and Perceived Duration", xlab="Type of Verb", ylab="Duration", ylim= c(1,7), names= c("Fear-Type", "Frighten-Type"), boxwex=0.4, par(mar=c(2,10,2,10))))
+boxplot(Duration~Type, data=d_tidy, main="Type of Verbs and Perceived Duration", xlab="Type of Verb", ylab="Duration", ylim= c(1,7), names= c("Fear-Type", "Frighten-Type"), boxwex=0.4, par(mar=c(2,10,2,10)))
 ```
+
+Looks good.
 
 The article states that:
 > 18 of the fear-type verbs (42%) were judged to have longer durations than any of the frighten-type verbs
@@ -125,7 +127,7 @@ compareValues(reportedValue = 19.9, obtainedValue = t.out$statistic) # compare t
 
 ## Step 5: Conclusion
 
-Except for a few minor discrepancies that are likely due to rounding differences, the project under investigation was reproduced successfully. Specifically, the reported results from the t-test and the boxplot in the original paper approximately matched the values obtained in the current reproduction attempt. 
+Except for a few minor discrepancies that are likely due to rounding differences, the project under investigation was reproduced successfully. Specifically, the reported results from the t-test and the boxplot in the original paper very closely matched the values obtained in the current reproduction attempt. 
 
 ```{r report}
 codReport(Report_Type = 'joint',
